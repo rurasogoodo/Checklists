@@ -55,6 +55,10 @@ class ChecklistViewController: UITableViewController {
         } else if indexPath.row == 4 {
             label.text = row4text
         }
+        
+        // проверяем значение/отсутствие "галочек" в каждой ячейке и ставим соответствующее обозначение
+        configureCheckmark(for: cell, at: indexPath)
+        
         return cell
     }
     
@@ -65,7 +69,32 @@ class ChecklistViewController: UITableViewController {
         
         // ставим/убираем "галочку" на выделенной ячейке
         if let cell = tableView.cellForRow(at: indexPath) {
-            configureCheckmark(for: cell, at: indexPath)
+            
+            var isChecked = false
+            
+            if indexPath.row == 0 {
+                row0checked = !row0checked
+                isChecked = row0checked
+            } else if indexPath.row == 1 {
+                row1checked = !row1checked
+                isChecked = row1checked
+            } else if indexPath.row == 2 {
+                row2checked = !row2checked
+                isChecked = row2checked
+            } else if indexPath.row == 3 {
+                row3checked = !row3checked
+                isChecked = row3checked
+            } else if indexPath.row == 4 {
+                row4checked = !row4checked
+                isChecked = row4checked
+            }
+            
+            // снимаем/добавляем "галочку" для ячейки
+            if isChecked {
+                cell.accessoryType = .checkmark
+            } else {
+                cell.accessoryType = .none
+            }
         }
         
         // снимаем "выделение" с этой нажатой ячейки
@@ -73,22 +102,22 @@ class ChecklistViewController: UITableViewController {
     }
     
     func configureCheckmark(for cell: UITableViewCell, at indexPath: IndexPath) {
-        var isCheked = false
+        var isChecked = false
         
         if indexPath.row == 0 {
-            isCheked = row0checked
+            isChecked = row0checked
         } else if indexPath.row == 1 {
-            isCheked = row1checked
+            isChecked = row1checked
         } else if indexPath.row == 2 {
-            isCheked = row2checked
+            isChecked = row2checked
         } else if indexPath.row == 3 {
-            isCheked = row3checked
+            isChecked = row3checked
         } else if indexPath.row == 4 {
-            isCheked = row4checked
+            isChecked = row4checked
         }
         
         // снимаем/добавляем "галочку" для ячейки
-        if isCheked {
+        if isChecked {
             cell.accessoryType = .checkmark
         } else {
             cell.accessoryType = .none
