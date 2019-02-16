@@ -10,28 +10,38 @@ import UIKit
 
 class ChecklistViewController: UITableViewController {
 
-    let row0text = "Walk the dog"
-    let row1text = "Brush the teeth"
-    let row2text = "Learn iOS development"
-    let row3text = "Soccer practice"
-    let row4text = "Eat ice cream"
-    
-    var row0checked = false
-    var row1checked = false
-    var row2checked = false
-    var row3checked = false
-    var row4checked = false
+    var items = [CheckListItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let item1 = CheckListItem()
+        item1.text = "Walk the dog"
+        items.append(item1)
+        
+        let item2 = CheckListItem()
+        item2.text = "Brush my teeth"
+        items.append(item2)
+        
+        let item3 = CheckListItem()
+        item3.text = "Learn iOS development"
+        items.append(item3)
+        
+        let item4 = CheckListItem()
+        item4.text = "Soccer practice"
+        items.append(item4)
+        
+        let item5 = CheckListItem()
+        item5.text = "Eat ice cream"
+        items.append(item5)
+        
     }
 
     //MARK: - Table View Data Source
     
     // устанавливаем количество ячеек для таблицы
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return items.count
     }
     
     // Указываем прототип ячейки, который будет дублироваться для таблицы
@@ -40,21 +50,14 @@ class ChecklistViewController: UITableViewController {
         // создаем ячейку
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
         
+        // берем нужный по индексу элемент массива для соответствующей по индексу строке в таблице
+        let item = items[indexPath.row]
+        
         // находим у ячейки Лейбл по Тегом "1000"
         let label = cell.viewWithTag(1000) as! UILabel
         
-        // указываем, что будет в Лейбле под тегом "1000", если его местоположение будет в нужно строке
-        if indexPath.row == 0 {
-            label.text = row0text
-        } else if indexPath.row == 1 {
-            label.text = row1text
-        } else if indexPath.row == 2 {
-            label.text = row2text
-        } else if indexPath.row == 3 {
-            label.text = row3text
-        } else if indexPath.row == 4 {
-            label.text = row4text
-        }
+        // присваиваем лейблу текст выбранного элемента
+        label.text = item.text
         
         // проверяем значение/отсутствие "галочек" в каждой ячейке и ставим соответствующее обозначение
         configureCheckmark(for: cell, at: indexPath)
@@ -69,32 +72,10 @@ class ChecklistViewController: UITableViewController {
         
         // ставим/убираем "галочку" на выделенной ячейке
         if let cell = tableView.cellForRow(at: indexPath) {
+            let item = items[indexPath.row]
+            item.checked = !item.checked
             
-            var isChecked = false
-            
-            if indexPath.row == 0 {
-                row0checked = !row0checked
-                isChecked = row0checked
-            } else if indexPath.row == 1 {
-                row1checked = !row1checked
-                isChecked = row1checked
-            } else if indexPath.row == 2 {
-                row2checked = !row2checked
-                isChecked = row2checked
-            } else if indexPath.row == 3 {
-                row3checked = !row3checked
-                isChecked = row3checked
-            } else if indexPath.row == 4 {
-                row4checked = !row4checked
-                isChecked = row4checked
-            }
-            
-            // снимаем/добавляем "галочку" для ячейки
-            if isChecked {
-                cell.accessoryType = .checkmark
-            } else {
-                cell.accessoryType = .none
-            }
+            configureCheckmark(for: cell, at: indexPath)
         }
         
         // снимаем "выделение" с этой нажатой ячейки
@@ -102,22 +83,10 @@ class ChecklistViewController: UITableViewController {
     }
     
     func configureCheckmark(for cell: UITableViewCell, at indexPath: IndexPath) {
-        var isChecked = false
         
-        if indexPath.row == 0 {
-            isChecked = row0checked
-        } else if indexPath.row == 1 {
-            isChecked = row1checked
-        } else if indexPath.row == 2 {
-            isChecked = row2checked
-        } else if indexPath.row == 3 {
-            isChecked = row3checked
-        } else if indexPath.row == 4 {
-            isChecked = row4checked
-        }
+        let item = items[indexPath.row]
         
-        // снимаем/добавляем "галочку" для ячейки
-        if isChecked {
+        if item.checked {
             cell.accessoryType = .checkmark
         } else {
             cell.accessoryType = .none
