@@ -15,6 +15,9 @@ class ChecklistViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // активируем большой шрифт в "navigationBar"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
         let item1 = CheckListItem()
         item1.text = "Walk the dog"
         items.append(item1)
@@ -76,6 +79,21 @@ class ChecklistViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    // указываем, что делать, если свайпнули какой-то элемент таблицы
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        // удаляем элемент массива по индексу свайпнутой строки
+        items.remove(at: indexPath.row)
+        
+        // создаем массив, где используем "положение по индексу в таблице для текущего свайпнутого элемента таблицы"
+        let indexPaths = [indexPath]
+        
+        // удаляем свайпнутый элемент таблицы
+        tableView.deleteRows(at: indexPaths, with: .automatic)
+        
+    }
+    
+    // настраиваем checkMark для нужной ячейки
     func configureCheckmark(for cell: UITableViewCell, with item: CheckListItem) {
         
         if item.checked {
@@ -85,10 +103,31 @@ class ChecklistViewController: UITableViewController {
         }
     }
     
+    // настраиваем текст для нужной ячейки
     func configureText(for cell: UITableViewCell, with item: CheckListItem) {
         
         let label = cell.viewWithTag(1000) as! UILabel
         label.text = item.text
     }
+    
+    // MARK:- Actions
+    @IBAction func addItem(_ sender: UIBarButtonItem) {
+        let newRowIndex = items.count
+        
+        // создаем новый экземпляр "CheckListItem"
+        let item = CheckListItem()
+        item.text = "I am a new row"
+        
+        // добавляем его в массив
+        items.append(item)
+        
+        // создаем "положение по индексу" для новой строки таблицы
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        
+        // добавляем в тейбл-вью массив из новых строк (в нашем случае массив с нашей новой одной строкой)
+        tableView.insertRows(at: indexPaths, with: .automatic)
+    }
+    
 }
 
